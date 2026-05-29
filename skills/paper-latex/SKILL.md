@@ -76,3 +76,15 @@ xelatex paper.tex && bibtex paper && xelatex paper.tex && xelatex paper.tex
 - 中文：计算机学报、软件学报、电子学报、自动化学报
 - 英文：IEEE/ACM/NeurIPS/ICLR/ICML/CVPR
 - 自定义模板直接支持
+
+## 从一半开始（无上游数据时）
+
+用户可能只给了模型代码，没有实验 CSV，也没有图。
+此时不硬编数据：
+
+- **有 CSV + 图**：完整写方法+实验+图表
+- **只有模型代码**：写方法部分，实验部分用 `% TODO: insert experiment results` 占位
+- **只有图**：写方法草稿 + 插入已有图，文字标注"数据待补充"
+- **三者都有**：出完整初稿
+
+缺什么就告诉用户缺什么，让用户决定是补充还是跳过。

@@ -50,3 +50,14 @@ tag, group, purpose, best_test, tm_mae, best_val, fpe, h3, h6, h12, timestamp
 - 生物信息学 → 参数扫参
 - 物理模拟 → 条件对比
 - 社会科学 → 假设检验
+
+## 实验矩阵可视化
+
+自动生成实验状态图：蓝色=已完成(带 MAE 值)，灰色=待跑。
+跑前看一眼，清楚哪些做了哪些没做。
+
+```
+/paper-experiment 展示当前实验矩阵
+```
+
+输出：`experiment_matrix.png` — 按组分类、标注最优。
