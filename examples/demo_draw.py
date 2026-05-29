@@ -57,7 +57,7 @@ def arrow(s1, s2):
 time.sleep(1.0)
 
 # ── INPUT ──
-X = rrect(6.0, 0.3, 2.0, 0.55, "Input Data", C["xg"], FB)
+X = rrect(6.0, 0.3, 2.0, 0.55, "", C["xg"], FB)
 time.sleep(0.3)
 
 # ── ENCODER CONTAINER ──
