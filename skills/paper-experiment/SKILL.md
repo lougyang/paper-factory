@@ -1,52 +1,52 @@
 # Paper Experiment — 实验流水线
 
-消融实验全流程自动化。从 config 创建到结果 CSV，一步到位。
+> **告诉用户**：把你设计好的实验矩阵告诉 AI，它会生成所有 config、验证消融开关、顺序运行、自动记录 CSV、跑完输出分析报告。你只需要写基线 config，其余自动完成。
 
-## 工作流
-
-```
-设计实验矩阵 → 生成 config → 验证开关 → 顺序运行 → 自动记录 CSV → 分析汇总
-```
-
-## 快速使用
+## 怎么用
 
 ```
-/paper-experiment 基于 C1 基线设计空间频域消融实验
-数据集 PEMS04, 变量 svd_k=[4,6,8,12,16]
+# 用法 1：给定基线和变量矩阵
+/paper-experiment 基于 C1 基线，变量 svd_k=[4,6,8,12,16]，PEMS04 数据集
+
+# 用法 2：只做验证和运行（config 已写好了）
+/paper-experiment 跑 configs/pems04/ablations/ 下所有待跑实验
+
+# 用法 3：只看已有结果
+/paper-experiment 分析 results/experiments.csv 并输出汇总
 ```
 
-Skill 自动：
-1. 读取基线 config，复制并修改变量
-2. 运行 `verify_configs.py` 检查所有消融开关
-3. 顺序启动训练（PYTHONPATH 自动注入）
-4. 每个实验完成后解析日志 → 写入 CSV
-5. 跑完后打印汇总表，按 best_test 排序
+## 做什么
 
-## Config 生成
+1. 读取基线 config → 按变量矩阵生成所有变体
+2. 运行验证脚本检查每个 config 的消融开关一致性
+3. 顺序启动训练（自动注入 PYTHONPATH，处理路径泄漏）
+4. 每完成一个实验：解析训练日志 → 提取 best_test、tm_mae、best_val → 写入 CSV
+5. 支持断点续跑（已完成的自动跳过）
+6. 跑完后按 group 分组输出汇总表
 
-基于模板 config 批量生成变体：
+## 输出
 
-```python
-for k in [4, 6, 8, 12, 16]:
-    cfg = copy_baseline()
-    cfg["svd_k"] = k
-    cfg["CKPT_SAVE_DIR"] = f".../C1_svd_k{k}_100_12_12"
-    write_config(cfg, f"C1_svd_k{k}.py")
+`results/experiments.csv`：
+```
+tag, group, purpose, best_test, tm_mae, best_val, fpe, h3, h6, h12, timestamp
 ```
 
 ## 关键规则
 
-- CKPT_SAVE_DIR 必须用绝对路径（避免 os.chdir 导致的路径泄漏）
-- PYTHONPATH 必须注入项目根目录
-- 每个 config 必须通过验证才能运行
-- 实验结果三值记录：best_test / test_metrics.json / best_val
+- CKPT_SAVE_DIR 必须绝对路径
+- PYTHONPATH 注入项目根目录
+- 三值记录：best_test / test_metrics.json / best_val
+- 按 best_test 排序，标出最优
 
-## 结果 CSV 格式
+## 联动
 
-```
-tag, group, purpose, best_test, tm_mae, best_val, fpe, h3, h6, h12
-```
+- **→ paper-figure-pro**：CSV 数据自动生成消融柱状图、参数量散点图
+- **→ paper-latex**：实验结果数值自动填入 LaTeX 表格
 
-## 模板
+## 适用范围
 
-`references/` 下有完整的 verify / run 脚本模板。
+不仅限于 ML。任何需要批量跑实验的研究方向：
+- 交通预测、CV、NLP → 消融实验
+- 生物信息学 → 参数扫参
+- 物理模拟 → 条件对比
+- 社会科学 → 假设检验

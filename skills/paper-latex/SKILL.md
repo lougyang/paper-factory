@@ -1,102 +1,78 @@
-# Paper LaTeX — 论文工厂核心
+# Paper LaTeX — 论文写作
 
-从实验数据到 LaTeX 初稿，一条龙。用户只需提供模型代码和理解，其余自动完成。
+> **告诉用户**：把你的模型代码、实验 CSV、图表文件夹路径告诉 AI，
+> 它会自动写入 LaTeX 模板、插入图表公式、编译出 .pdf 初稿。
+> 默认用计算机学报模板，你也可以指定 IEEE/ACM/NeurIPS 或自己的模板。
 
-## 工作流
+## 怎么用
 
 ```
-用户输入 → 理解模型 → 写各章节 → 插入图表 → 编译 → 交付 .tex + .pdf
+# 默认模板（计算机学报 中文）
+/paper-latex 模型在 D:/Code/SpecFlow/，实验数据在 results/experiments.csv
+
+# 指定模板
+/paper-latex 用 IEEE Trans 模板写英文论文
+
+# 只写某个章节
+/paper-latex 重写实验部分，更新图3和图4
+
+# 用自己的模板
+/paper-latex 模板在 D:/templates/myconf.cls，写英文论文
 ```
+
+## 做什么
+
+1. 读取模型代码 → 理解架构，生成方法部分的描述和公式
+2. 读取实验 CSV → 生成实验部分的表格和数值
+3. 读取图表文件夹 → 自动插入 `\includegraphics{}`
+4. 按模板格式写全文：摘要→引言→相关工作→方法→实验→结论
+5. XeLaTeX 编译 → 输出 .pdf
 
 ## 支持的模板
 
-| 模板 | 语言 | 编译 | 默认 |
-|------|------|------|------|
-| 计算机学报 (cjc.cls) | 中文 | XeLaTeX | ✓ |
-| IEEE Trans | 英文 | PDFLaTeX | |
-| ACM | 英文 | PDFLaTeX | |
-| NeurIPS | 英文 | PDFLaTeX | |
-| 自定义 | 任意 | 任意 | |
+| 模板 | 语言 | 编译 | 获取方式 |
+|------|------|------|---------|
+| 计算机学报 cjc.cls | 中文 | XeLaTeX | 内置 / CTAN |
+| IEEEtran | 英文 | PDFLaTeX | CTAN |
+| ACM acmart | 英文 | PDFLaTeX | CTAN |
+| NeurIPS | 英文 | PDFLaTeX | 官网 |
+| 自定义 | 任意 | 指定 | 用户提供路径 |
 
-用户可通过参数指定模板，默认使用计算机学报。
+## 章节规则
 
-## 使用方式
-
-```
-/paper-latex 用计算机学报模板写论文
-模型代码在 D:/Code/MyModel/
-实验数据在 results/experiments.csv
-```
-
-Skill 自动：
-1. 读取模型代码，理解架构
-2. 读取实验数据 CSV
-3. 读取已有图表文件
-4. 按模板格式写：摘要→引言→相关工作→方法→实验→结论
-5. 插入图表、公式、参考文献
-6. XeLaTeX 编译，输出 .pdf
-
-## 章节生成规则
-
-### 摘要
-- 1 句话问题背景 + 1 句话现有方法缺陷 + 1 句话本文方法 + 关键数据
-
-### 引言
-- 第 1 段：问题重要性
-- 第 2-3 段：现有工作及不足
-- 第 4 段：本文贡献 (3-4 点)
-- 第 5 段：论文组织
-
-### 相关工作
-- 按主题分 2-3 小节
-- 每篇引用必须有论文库中的真实条目
-- 不虚构参考文献
-
-### 方法
-- 问题定义 → 总体框架 → 各模块展开 → 损失函数
-- 关键公式用 equation 环境
-- 架构图用 figure 环境引用
-
-### 实验
-- 数据集 + 指标 + 基线
-- 主结果表 + 消融表 + 可视化图
-- 数据从 CSV 读取，不硬编码
-
-### 结论
-- 总结贡献 + 未来方向
+- 摘要：1句背景 + 1句不足 + 1句本文方法 + 关键数据
+- 引言：第1段问题→第2-3段现有工作→第4段贡献→第5段组织
+- 方法：问题定义→总体框架→各模块→损失函数。公式用 equation 环境
+- 实验：数据集+指标+基线+主结果表+消融+可视化。数据从 CSV 读取
+- 结论：总结+未来方向，不重复结果部分
 
 ## 参考文献
 
-- 从用户论文库 (.bib) 加载
-- `\cite{}` 引用的条目必须在 .bib 中存在
+- 从用户 .bib 加载，`\cite{}` 引用的条目必须存在
 - 不虚构任何参考文献
+- 支持 bibtex/biblatex
 
 ## 编译
 
 ```bash
-xelatex paper.tex
-bibtex paper
-xelatex paper.tex
-xelatex paper.tex
+xelatex paper.tex && bibtex paper && xelatex paper.tex && xelatex paper.tex
 ```
 
-## 模板安装
+## 联动
 
-用户没有模板时，自动下载：
+- **paper-experiment → 这里**：实验数据自动填入表格
+- **paper-figure-pro → 这里**：图路径自动写入
+- **paper-latex 内部**：模板缺失时自动下载或使用内置副本
 
-```
-计算机学报 cjc.cls → 从 CTAN 镜像下载或使用内置副本
-IEEEtran.cls → CTAN
-acmart.cls → CTAN
-neurips_2025.sty → NeurIPS 官网
-```
+## 语言风格
 
-内置副本在 `references/` 目录。
+- 中文：简洁直接，不堆砌车轱辘话，不 AI 排比句
+- 英文：Nature-leaning academic English
+- 所有数据来自用户文件，所有引用来自用户 .bib
 
-## 注意事项
+## 适用范围
 
-- 所有实验数据必须来自用户提供的文件，不虚构
-- 所有参考文献必须来自用户的 .bib 库
-- 图表路径使用相对路径
-- 保证 XeLaTeX 编译通过（UTF-8 编码，中文支持）
-- 论文语言风格：简洁直接，不堆砌车轱辘话
+任何需要写学术论文的方向——不仅是 CS，任何有模板的期刊都可以：
+- 中文：计算机学报、软件学报、电子学报、自动化学报
+- 英文：IEEE/ACM/NeurIPS/ICLR/ICML/CVPR
+- 自定义模板直接支持
