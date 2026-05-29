@@ -1,95 +1,62 @@
-# Visio Draw — Claude Code Skill
+# Paper Factory — 论文工厂
 
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%2B%20Visio-lightgrey)]()
+一个 AI 编程助手的技能包。从实验到论文初稿，全流程覆盖。
 
-一条命令画出论文级架构图。直接调用 Microsoft Visio COM API，颜色、字体、连线全部精准控制。
+> 用户只需要做实验、提供代码、理解自己的模型。剩下的交给 Paper Factory。
 
-> 抖音教程 / 使用演示：搜索「Claude Code Skill 学术绘图」
+## 论文生产流程
+
+```
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│  实验流水线   │ →  │  图表绘制     │ →  │  LaTeX 写作  │ →  │  论文初稿     │
+│  experiment  │    │  figure-pro   │    │    latex     │    │  .tex + .pdf │
+└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
+```
+
+## 四个 Skill
+
+| Skill | 做什么 | 输入 | 输出 |
+|-------|--------|------|------|
+| **paper-experiment** | 实验流水线 | 基线 config + 变量矩阵 | 全部结果 CSV |
+| **paper-figure-pro** | 图表绘制 | 模型结构 + 实验数据 | .vsdx / .pdf / .png |
+| **paper-latex** | 论文写作 | 模型代码 + CSV + 图表 | .tex + .pdf |
+| **visio-draw** | Visio COM 底层 | 坐标和形状定义 | .vsdx |
 
 ## 30 秒安装
 
-```powershell
-# 1. 安装 skill
-git clone https://github.com/YOUR_NAME/skills-collection.git
-cp -r skills-collection/skills/visio-draw $env:USERPROFILE\.claude\skills\visio-draw
-
-# 2. 安装 Python 依赖
-pip install pywin32
-
-# 3. 在 Claude Code 中使用
-# 输入: /visio-draw 画一个 GPT 模型架构图
+```bash
+git clone https://github.com/YOUR_NAME/paper-factory.git
+cp -r paper-factory/skills/* ~/.claude/skills/
+pip install pywin32 matplotlib numpy
 ```
 
-## 能画什么
+## 支持的图表类型
 
-| 图类型 | 示例 |
-|--------|------|
-| 模型架构框架图 | 双分支网络、编码器-解码器、GAN |
-| 系统架构图 | 微服务拓扑、数据流水线 |
-| 论文模块图 | 深度学习模型结构、消融分支对比 |
-| 流程图 | 算法流程、数据处理管道 |
+架构图 / 消融柱状图 / 精度-参数量散点图 / 多步预测误差图 / 收敛曲线 / SVD 奇异值衰减 / 流量分解图 / 损失权重分析 / 热力图 / 流程图
 
-## 为什么不用 Visiomaster / Draw.io / PPT
+## 支持的论文模板
 
-| 工具 | 问题 |
-|------|------|
-| Visiomaster | scene.json 渲染器填色丢失、连线乱飞 |
-| Draw.io | 手动拖拽费时，无法程序化复用 |
-| PPT | 形状有限，学术风格不够 |
-| **Visio Draw** | COM 直连，每个像素都可控，一次写好终身复用 |
+| 模板 | 语言 | 编译 |
+|------|------|------|
+| 计算机学报 (cjc.cls) | 中文 | XeLaTeX |
+| IEEE Trans | 英文 | PDFLaTeX |
+| ACM | 英文 | PDFLaTeX |
+| NeurIPS | 英文 | PDFLaTeX |
+| 自定义模板 | 任意 | 任意 |
 
-## 效果展示
+## 设计原则
 
-见 `examples/` 目录：
-
-```
-examples/
-  specflow_arch.png    — SpecFlow 双分支频域架构图（计算机学报论文用）
-```
-
-运行示例（需要克隆 SpecFlow 项目到同级目录）：
-
-```powershell
-python examples/specflow_arch.py
-```
-
-## 自定义你的图
-
-复制 `skills/visio-draw/references/draw_template.py`，修改 `LAYOUT` 部分：
-
-```python
-# 定义一个矩形
-box = R(x=1.0, y=2.0, w=2.5, h=0.8,
-        text="My Module", fill=COLORS["fam1_inner"])
-
-# 定义一个圆角矩形
-out = RR(x=1.0, y=5.0, w=2.0, h=0.5,
-         text="Output", fill=COLORS["fam1_dark"], font_size="15 pt")
-
-# 画一条连线
-A(box, out)
-```
-
-完整 API 见 SKILL.md。
+- Marshall et al. (2025) — 神经网络架构图证据指南
+- Jambor (2025) — 科学图表检查清单 (Nature Cell Biology)
+- Crameri et al. (2024) — 科学配色标准
+- 格式塔原理 — 邻近、对齐、对称、公共区域
 
 ## 系统要求
 
-- Windows 10/11
-- Microsoft Visio 2016+ 桌面版
-- Python 3.10+ + pywin32
-- Claude Code（或任何支持 Skill 的 AI 编程助手）
-
-## 路线图
-
-- [ ] 更多内置调色板（Nature/Science/NeurIPS 风格）
-- [ ] 自动布局引擎
-- [ ] LaTeX 公式支持
-- [ ] 批量生成实验对比图
-
-## 贡献
-
-欢迎提 PR 或 Issue。如果你有好的配色方案或布局模板，直接发 PR 到 `skills/visio-draw/`。
+- Python 3.10+
+- matplotlib, numpy, pywin32 (Visio 图需要)
+- Windows + Visio 桌面版 (架构图，非必需)
+- LaTeX 发行版 (XeLaTeX, 论文写作需要)
 
 ## License
 
