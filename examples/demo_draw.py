@@ -34,7 +34,7 @@ def rrect(x, y, ww, hh, t, fill, fs=FS):
     return rect(x, y, ww, hh, t, fill, fs, 0.08)
 
 def container(x, y, ww, hh, t, fill):
-    s = rect(x, y, ww, hh, t, fill, "10 pt")
+    s = rect(x, y, ww, hh, t, fill, '')
     s.Cells("LineColor").Formula = "RGB(160,165,175)"; s.Cells("LineWeight").Formula = "1.0 pt"
     s.Cells("VerticalAlign").Formula = 0; s.Cells("Para.HorzAlign").Formula = 0
     return s
@@ -57,41 +57,41 @@ def arrow(s1, s2):
 time.sleep(1.0)
 
 # ── INPUT ──
-X = rrect(6.0, 0.3, 2.0, 0.55, "", C["xg"], FB)
+X = rrect(6.0, 0.3, 2.0, 0.55, '', C["xg"], FB)
 time.sleep(0.3)
 
 # ── ENCODER CONTAINER ──
-ce = container(0.4, 1.3, 6.0, 4.5, "  Encoder Branch", C["bbg"])
+ce = container(0.4, 1.3, 6.0, 4.5, '', C["bbg"])
 time.sleep(0.2)
-e1 = rect(0.8, 1.9, 2.5, 0.7, "Feature Extractor\nConv + BN + ReLU", C["bin"])
-e2 = rect(3.7, 1.9, 2.5, 0.7, "Multi-Head Attention\n8 Heads", C["bin"])
+e1 = rect(0.8, 1.9, 2.5, 0.7, '', C["bin"])
+e2 = rect(3.7, 1.9, 2.5, 0.7, '', C["bin"])
 time.sleep(0.2)
-e1o = rrect(1.1, 2.9, 1.9, 0.5, "Local Features", C["bout"])
-e2o = rrect(4.0, 2.9, 1.9, 0.5, "Global Context", C["bout"])
+e1o = rrect(1.1, 2.9, 1.9, 0.5, '', C["bout"])
+e2o = rrect(4.0, 2.9, 1.9, 0.5, '', C["bout"])
 time.sleep(0.2)
-ep = circle(3.5, 3.7, 0.28, "+", C["bp"])
+ep = circle(3.5, 3.7, 0.28, '', C["bp"])
 time.sleep(0.2)
-eout = rrect(1.8, 4.5, 3.0, 0.55, "Encoded Features", C["bout"], FB)
+eout = rrect(1.8, 4.5, 3.0, 0.55, '', C["bout"], FB)
 time.sleep(0.3)
 
 # ── DECODER CONTAINER ──
-cd = container(7.0, 1.3, 6.5, 4.5, "  Decoder Branch", C["obg"])
+cd = container(7.0, 1.3, 6.5, 4.5, '', C["obg"])
 time.sleep(0.2)
-d1 = rect(7.4, 1.9, 5.5, 0.55, "Cross-Attention Layer", C["oin"])
+d1 = rect(7.4, 1.9, 5.5, 0.55, '', C["oin"])
 time.sleep(0.2)
-d2 = rect(7.4, 2.65, 2.5, 0.7, "Spatial\nTransform", C["ofq"])
-d3 = rect(10.4, 2.65, 2.5, 0.7, "Channel\nTransform", C["ofq"])
+d2 = rect(7.4, 2.65, 2.5, 0.7, '', C["ofq"])
+d3 = rect(10.4, 2.65, 2.5, 0.7, '', C["ofq"])
 time.sleep(0.2)
-d2o = rect(8.3, 3.55, 3.0, 0.5, "Fusion Module", C["oin"])
+d2o = rect(8.3, 3.55, 3.0, 0.5, '', C["oin"])
 time.sleep(0.2)
-d4 = rect(7.4, 4.25, 5.5, 0.55, "Feed-Forward Network", C["ofc"])
+d4 = rect(7.4, 4.25, 5.5, 0.55, '', C["ofc"])
 time.sleep(0.2)
-dout = rrect(9.0, 5.0, 2.5, 0.55, "Decoder Output", C["odo"], FB)
+dout = rrect(9.0, 5.0, 2.5, 0.55, '', C["odo"], FB)
 time.sleep(0.3)
 
 # ── FINAL ──
-fp = circle(7.0, 6.3, 0.28, "+", C["ag"])
-Y = rrect(5.5, 6.9, 3.0, 0.55, "Final Prediction", C["yg"], FB)
+fp = circle(7.0, 6.3, 0.28, '', C["ag"])
+Y = rrect(5.5, 6.9, 3.0, 0.55, '', C["yg"], FB)
 time.sleep(0.5)
 
 # ── CONNECTORS ──
