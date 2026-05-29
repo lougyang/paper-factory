@@ -24,7 +24,7 @@ pg=page.PageSheet
 pg.Cells("PageWidth").Formula=f"{PW} in"
 pg.Cells("PageHeight").Formula=f"{PH} in"
 
-def R(x,y,w,h,t,fill,fs=FS,r=0.0):
+def rect(x,y,w,h,t,fill,fs=FS,r=0.0):
     s=page.DrawRectangle(x,Y(y+h),x+w,Y(y))
     s.Cells("FillForegnd").Formula=fill;s.Cells("FillPattern").Formula=1
     s.Cells("LineColor").Formula=C["ln"];s.Cells("LineWeight").Formula="0.7 pt"
@@ -32,19 +32,19 @@ def R(x,y,w,h,t,fill,fs=FS,r=0.0):
     s.Text=t;s.Cells("Char.Size").Formula=fs;s.Cells("Para.HorzAlign").Formula=1
     time.sleep(0.12);return s
 
-def RR(x,y,w,h,t,fill,fs=FS):return R(x,y,w,h,t,fill,fs,0.08)
-def CT(x,y,w,h,t,fill):
+def rrect(x,y,w,h,t,fill,fs=FS):return rect(x,y,w,h,t,fill,fs,0.08)
+def container(x,y,w,h,t,fill):
     s=R(x,y,w,h,t,fill,"10 pt");s.Cells("LineColor").Formula="RGB(160,165,175)"
     s.Cells("LineWeight").Formula="1.0 pt";s.Cells("VerticalAlign").Formula=0
     s.Cells("Para.HorzAlign").Formula=0;return s
-def O(cx,cy,r,sym,fill):
+def circle(cx,cy,r,sym,fill):
     s=page.DrawOval(cx-r,Y(cy+r),cx+r,Y(cy-r))
     s.Cells("FillForegnd").Formula=fill;s.Cells("FillPattern").Formula=1
     s.Cells("LineColor").Formula=C["ln"];s.Cells("LineWeight").Formula="0.8 pt"
     s.Text=sym;s.Cells("Char.Size").Formula=FS_P;s.Cells("Para.HorzAlign").Formula=1
     time.sleep(0.12);return s
-def TR(x,y,w,h,t,fill):return R(x,y,w,h,t,fill,FS_B,0.12)
-def A(s1,s2):
+def term(x,y,w,h,t,fill):return R(x,y,w,h,t,fill,FS_B,0.12)
+def arrow(s1,s2):
     c=page.Drop(page.Application.ConnectorToolDataObject,0,0)
     c.Cells("BeginX").GlueTo(s1.Cells("PinX"));c.Cells("EndX").GlueTo(s2.Cells("PinX"))
     c.Cells("LineColor").Formula="RGB(80,80,90)";c.Cells("LineWeight").Formula="0.85 pt"
